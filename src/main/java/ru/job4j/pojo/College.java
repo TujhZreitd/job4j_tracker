@@ -9,7 +9,7 @@ public class College {
         student.setNumberGroup(202);
         student.setAdmissionDate(new Date());
 
-        System.out.println("ФИО студента: " + student.getStudent() + "\n" + "Номер группы студента: " + student.getNumberGroup() + "\n"
+        System.out.println("ФИО студента: " + student.getStudent() + System.lineSeparator() + "Номер группы студента: " + student.getNumberGroup() + System.lineSeparator()
         + "Дата поступления студента: " + student.getAdmissionDate());
     }
 }
