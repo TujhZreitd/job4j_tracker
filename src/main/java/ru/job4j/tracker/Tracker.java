@@ -26,35 +26,20 @@ public class Tracker {
     }
 
     public Item[] findAll() {
-        /*Item[] result = new Item[size];
-        for (int index = 0; index < size; index++) {
-            Item item = items[index];
-            if (item != null) {
-                result[index] = item;
-            }
-        }
-        result = Arrays.copyOf(result, size);
-        return result;*/
-        return items;
+        return Arrays.copyOf(items, size);
     }
-    /* свое начальное решение, по логике тоже неправильное, я решил закомментировать, чтобы была возможность проверить
-    * его правильность */
 
     public Item[] findByName(String key) {
         Item[] result = new Item[size];
-        int sizeResult = 0;
+        int count = 0;
         for (int index = 0; index < size; index++) {
             Item item = items[index];
             if (key.equals(item.getName())) {
-                result[index] = item;
-                sizeResult++;
+                result[count] = item;
+                count++;
             }
         }
-        result = Arrays.copyOf(result, sizeResult);
-        /* по логике, здесь как будто напрашивалось приминение метода findAll, не вводя переменную sizeResult,
-        * но из-за нелогичного теста на метод findAll, который ввел меня в дикое заблуждение, решил так.
-        * Либо я, просидев около 3 часов над данным решением, совсем запутался в теме. Если в ответе развернуто напишите,
-        * как тут все работает и в чем я не прав, буду благодарен */
+        result = Arrays.copyOf(result, count);
         return result;
     }
 }
