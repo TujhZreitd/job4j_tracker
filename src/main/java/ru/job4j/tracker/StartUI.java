@@ -12,5 +12,7 @@ public class StartUI {
         String resultFormat = resultNotFormat.format(formatter);
         System.out.println(resultFormat);
 
+        Item object2 = new Item(2, "Egor");
+        System.out.println(object2);
     }
 }
