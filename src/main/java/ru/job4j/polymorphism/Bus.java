@@ -6,7 +6,9 @@ public class Bus implements Transport {
     private final double priceOil = 40.0;
 
     @Override
-    public void drive() { }
+    public void drive() {
+        System.out.println("Drive");
+    }
 
     @Override
     public void passengers(int passengers) {
