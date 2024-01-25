@@ -6,7 +6,6 @@ public class StartUI {
         boolean run = true;
         while (run) {
             showMenu();
-            System.out.print("Выбрать: ");
             int select = input.askInt("Введите id: ");
             if (select == 0) {
                 createItem(input, tracker);
