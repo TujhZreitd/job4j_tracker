@@ -45,7 +45,7 @@ class ValidateTest {
                 case 3 -> assertThat(selected).isEqualTo(3);
                 case 4 -> assertThat(selected).isEqualTo(4);
                 case 5 -> assertThat(selected).isEqualTo(5);
-                case 6 -> assertThat(selected).isEqualTo(6);
+                default -> assertThat(selected).isEqualTo(6); // нарушает логику алгоритма (хотелось бы case 6 оставить), но без default не пропускает checkstyle
             }
         }
     }
