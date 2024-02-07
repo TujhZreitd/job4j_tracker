@@ -36,19 +36,14 @@ class ValidateTest {
         String[] inputData = new String[]{"2", "5", "3", "1"};
         Input in = new Mock(inputData);
         Validate input = new Validate(output, in);
-        for (String inp : inputData) {
-            int selected = input.askInt("Enter menu:");
-            switch (parseInt(inp)) {
-                case 0 -> assertThat(selected).isEqualTo(0);
-                case 1 -> assertThat(selected).isEqualTo(1);
-                case 2 -> assertThat(selected).isEqualTo(2);
-                case 3 -> assertThat(selected).isEqualTo(3);
-                case 4 -> assertThat(selected).isEqualTo(4);
-                case 5 -> assertThat(selected).isEqualTo(5);
-                default -> assertThat(selected).isEqualTo(6);
-                /* нарушает логику алгоритма (хотелось бы case 6 оставить), но без default не пропускает checkstyle*/
-            }
-        }
+        int selected = input.askInt("Enter menu:");
+        assertThat(selected).isEqualTo(2);
+        selected = input.askInt("Enter menu:");
+        assertThat(selected).isEqualTo(5);
+        selected = input.askInt("Enter menu:");
+        assertThat(selected).isEqualTo(3);
+        selected = input.askInt("Enter menu:");
+        assertThat(selected).isEqualTo(1);
     }
 
     @Test
