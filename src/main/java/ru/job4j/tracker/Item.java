@@ -3,6 +3,7 @@ package ru.job4j.tracker;
 import java.time.LocalDateTime;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class Item {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MMMM-EEEE-yyyy HH:mm:ss");
@@ -49,5 +50,22 @@ public class Item {
                 + ", name='" + name + '\''
                 + ", created=" + created.format(FORMATTER)
                 + '}';
+    }
+
+   @Override
+    public int hashCode() {
+       return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Item item = (Item) obj;
+        return Objects.equals(id, item.id);
     }
 }
