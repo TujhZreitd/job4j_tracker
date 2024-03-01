@@ -66,6 +66,6 @@ public class Item {
             return false;
         }
         Item item = (Item) obj;
-        return Objects.equals(id, item.id);
+        return this.id == item.id && this.name.equals(item.name);
     }
 }
