@@ -13,14 +13,15 @@ public class BankService {
     }
 
     public void deleteUser(String passport) {
-        users.remove(findByPassport(passport));
+        users.remove(new User(passport, ""));
     }
 
     public void addAccount(String passport, Account account) {
         User user = findByPassport(passport);
         if (user != null) {
-            if (!users.get(user).contains(account)) {
-                users.get(user).add(account);
+            List<Account> account1 = users.get(user);
+            if (!account1.contains(account)) {
+                account1.add(account);
             }
         }
     }
@@ -35,18 +36,20 @@ public class BankService {
     }
 
     public Account findByRequisite(String passport, String requisite) {
+        Account result = null;
         User user = findByPassport(passport);
         if (user == null) {
-            return null;
-        }
-        List<Account> result = new ArrayList<>();
-        result.addAll(users.get(user));
-        for (Account account : result) {
-            if (account.getRequisite().equals(requisite)) {
-                return account;
+            result = null;
+        } else {
+            List<Account> result1 = new ArrayList<>();
+            result1.addAll(users.get(user));
+            for (Account account : result1) {
+                if (account.getRequisite().equals(requisite)) {
+                    result = account;
+                }
             }
         }
-        return null;
+        return result;
     }
 
     public boolean transferMoney(String sourcePassport, String sourceRequisite,
@@ -58,11 +61,10 @@ public class BankService {
                 || destination == null
                 || source.getBalance() < amount) {
             return false;
-        } else {
-            source.setBalance(source.getBalance() - amount);
-            destination.setBalance(destination.getBalance() + amount);
-            return true;
         }
+        source.setBalance(source.getBalance() - amount);
+        destination.setBalance(destination.getBalance() + amount);
+        return true;
     }
 
     public List<Account> getAccounts(User user) {
