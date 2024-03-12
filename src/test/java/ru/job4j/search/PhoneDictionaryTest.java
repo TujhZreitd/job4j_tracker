@@ -37,4 +37,14 @@ public class PhoneDictionaryTest {
         boolean result =  persons.isEmpty();
         assertThat(result).isEqualTo(true);
     }
+
+    @Test
+    public void whenFindByNameLambda() {
+        PhoneDictionary phones = new PhoneDictionary();
+        phones.add(
+                new Person("Petr", "Arsentev", "534872", "Bryansk")
+        );
+        ArrayList<Person> persons = phones.find("Petr");
+        assertThat(persons.get(0).getSurname()).isEqualTo("Arsentev");
+    }
 }
