@@ -1,6 +1,7 @@
 package ru.job4j.hashmap;
 
 import java.util.*;
+import java.util.function.BiFunction;
 
 public class AnalyzeByMap {
     public static double averageScore(List<Pupil> pupils) {
@@ -33,15 +34,17 @@ public class AnalyzeByMap {
     public static List<Label> averageScoreBySubject(List<Pupil> pupils) {
         List<Label> result = new ArrayList<>();
         Map<String, Integer> scoreBySubjects = new LinkedHashMap<>();
+        BiFunction<Integer, Integer, Integer> biFunction = (oldValue, newValue) -> oldValue + newValue;
         int quantityPupils = 0;
         for (Pupil pupil : pupils) {
             for (Subject subject : pupil.subjects()) {
-                scoreBySubjects.put(subject.name(), scoreBySubjects.getOrDefault(subject.name(), 0) + subject.score());
+                scoreBySubjects.merge(subject.name(), subject.score(), biFunction);
             }
             quantityPupils++;
         }
-        for (String subject : scoreBySubjects.keySet()) {
-            result.add(new Label(subject, scoreBySubjects.get(subject) / quantityPupils));
+        for (Map.Entry<String, Integer> entry : scoreBySubjects.entrySet()) {
+            Label label = new Label(entry.getKey(), entry.getValue() / quantityPupils);
+            result.add(label);
         }
         return result;
     }
@@ -62,9 +65,10 @@ public class AnalyzeByMap {
     public static Label bestSubject(List<Pupil> pupils) {
         Map<String, Integer> scoreBySubjects = new LinkedHashMap<>();
         List<Label> result = new ArrayList<>();
+        BiFunction<Integer, Integer, Integer> biFunction = (oldValue, newValue) -> oldValue + newValue;
         for (Pupil pupil : pupils) {
             for (Subject subject : pupil.subjects()) {
-                scoreBySubjects.put(subject.name(), scoreBySubjects.getOrDefault(subject.name(), 0) + subject.score());
+                scoreBySubjects.merge(subject.name(), subject.score(), biFunction);
             }
         }
         for (String subject : scoreBySubjects.keySet()) {
