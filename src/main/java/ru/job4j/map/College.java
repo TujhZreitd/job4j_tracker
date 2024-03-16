@@ -20,8 +20,9 @@ public class College {
     }
 
     public Optional<Subject> findBySubjectName(String account, String name) {
-        if (findByAccount(account).isPresent()) {
-            return students.get(findByAccount(account).get())
+        Optional<Student> student = findByAccount(account);
+        if (student.isPresent()) {
+            return students.get(student.get())
                     .stream()
                     .filter(subject -> subject.name().equals(name))
                     .findFirst();
