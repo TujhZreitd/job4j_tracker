@@ -1,14 +1,10 @@
 package ru.job4j.stream;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.Double.compare;
-import static java.lang.Double.sum;
 
 public class Analyze {
     public static double averageScore(Stream<Pupil> stream) {
@@ -46,11 +42,11 @@ public class Analyze {
 
     public static Tuple bestSubject(Stream<Pupil> stream) {
         return stream.flatMap(pupil -> pupil.subjects().stream())
-                .collect(Collectors.groupingBy(subject -> subject.name(), LinkedHashMap::new, Collectors.summingDouble(Subject::score)))
+                .collect(Collectors.groupingBy(subject -> subject.name(), Collectors.summingDouble(Subject::score)))
                 .entrySet()
                 .stream()
                 .map(name -> new Tuple(name.getKey(), name.getValue()))
-                .max((turple1, turple2) -> compare(turple1.score(), turple2.score()))
+                .max(Comparator.comparingDouble(Tuple::score))
                 .orElse(null);
     }
 }
