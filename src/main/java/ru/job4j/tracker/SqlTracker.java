@@ -22,7 +22,7 @@ public class SqlTracker implements Store {
 
     private void init() {
         try (InputStream input = SqlTracker.class.getClassLoader()
-                .getResourceAsStream("app.properties")) {
+                .getResourceAsStream("db/liquibase.properties")) {
             Properties config = new Properties();
             config.load(input);
             Class.forName(config.getProperty("driver-class-name"));
@@ -46,7 +46,7 @@ public class SqlTracker implements Store {
     @Override
     public Item add(Item item) {
         try (PreparedStatement statement =
-                connection.prepareStatement("INSERT INTO tracker(name, date) values(?, ?);",
+                connection.prepareStatement("INSERT INTO items(name, date) values(?, ?);",
                 Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, item.getName());
             statement.setTimestamp(2, Timestamp.valueOf(item.getCreated()));
@@ -65,7 +65,7 @@ public class SqlTracker implements Store {
     @Override
     public boolean replace(int id, Item item) {
         boolean result = false;
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE tracker SET name = ?, date = ? WHERE id = ?;")) {
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE items SET name = ?, date = ? WHERE id = ?;")) {
             statement.setString(1, item.getName());
             statement.setTimestamp(2, Timestamp.valueOf(item.getCreated()));
             statement.setInt(3, id);
@@ -78,7 +78,7 @@ public class SqlTracker implements Store {
 
     @Override
     public void delete(int id) {
-        try (PreparedStatement statement = connection.prepareStatement("DELETE from tracker where id = ?;")) {
+        try (PreparedStatement statement = connection.prepareStatement("DELETE from items where id = ?;")) {
             statement.setInt(1, id);
             statement.execute();
         } catch (Exception e) {
@@ -89,7 +89,7 @@ public class SqlTracker implements Store {
     @Override
     public List<Item> findAll() {
         List<Item> result = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM tracker;")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM items;")) {
             try (ResultSet res = statement.executeQuery()) {
                 while (res.next()) {
                     result.add(new Item(
@@ -107,7 +107,7 @@ public class SqlTracker implements Store {
     @Override
     public List<Item> findByName(String key) {
         List<Item> result = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM tracker WHERE name = ?;")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM items WHERE name = ?;")) {
             statement.setString(1, key);
             try (ResultSet res = statement.executeQuery()) {
                 while (res.next()) {
@@ -126,7 +126,7 @@ public class SqlTracker implements Store {
     @Override
     public Item findById(int id) {
         Item item = new Item();
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM tracker WHERE id = ?;")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM items WHERE id = ?;")) {
             statement.setInt(1, id);
             try (ResultSet res = statement.executeQuery()) {
                 if (res == null) {
