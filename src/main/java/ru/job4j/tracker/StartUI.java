@@ -15,7 +15,7 @@ public class StartUI {
         this.output = output;
     }
 
-    public void init(Input input, Tracker tracker, List<UserAction> actions) {
+    public void init(Input input, Store tracker, List<UserAction> actions) {
         boolean run = true;
         while (run) {
             showMenu(actions);
@@ -39,7 +39,7 @@ public class StartUI {
     public static void main(String[] args) {
         Output output = new Console();
         Input input = new Validate(output, new ru.job4j.tracker.input.Console());
-        Tracker tracker = new Tracker();
+        Store tracker = new SqlTracker();
         List<UserAction> actions = Arrays.asList(new Create(output),
                 new FindAll(output),
                 new Replace(output),
