@@ -3,6 +3,7 @@ package ru.job4j.tracker;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PrimitiveIterator;
@@ -36,6 +37,10 @@ public class SqlTracker implements Store {
         }
     }
 
+    private Item createItem(int id, String name, LocalDateTime date) {
+        return new Item(id, name, date);
+    }
+
     @Override
     public void close() throws SQLException {
         if (connection != null) {
@@ -46,7 +51,7 @@ public class SqlTracker implements Store {
     @Override
     public Item add(Item item) {
         try (PreparedStatement statement =
-                connection.prepareStatement("INSERT INTO items(name, date) values(?, ?);",
+                connection.prepareStatement("INSERT INTO items(name, created) values(?, ?);",
                 Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, item.getName());
             statement.setTimestamp(2, Timestamp.valueOf(item.getCreated()));
@@ -65,7 +70,7 @@ public class SqlTracker implements Store {
     @Override
     public boolean replace(int id, Item item) {
         boolean result = false;
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE items SET name = ?, date = ? WHERE id = ?;")) {
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE items SET name = ?, created = ? WHERE id = ?;")) {
             statement.setString(1, item.getName());
             statement.setTimestamp(2, Timestamp.valueOf(item.getCreated()));
             statement.setInt(3, id);
@@ -92,10 +97,10 @@ public class SqlTracker implements Store {
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM items;")) {
             try (ResultSet res = statement.executeQuery()) {
                 while (res.next()) {
-                    result.add(new Item(
-                            res.getInt("id"),
-                            res.getString("name"),
-                            res.getTimestamp("date").toLocalDateTime()));
+                    result.add(createItem(
+                                    res.getInt("id"),
+                                    res.getString("name"),
+                                    res.getTimestamp("created").toLocalDateTime()));
                 }
             }
         } catch (Exception e) {
@@ -111,10 +116,10 @@ public class SqlTracker implements Store {
             statement.setString(1, key);
             try (ResultSet res = statement.executeQuery()) {
                 while (res.next()) {
-                    result.add(new Item(
+                    result.add(createItem(
                             res.getInt("id"),
                             res.getString("name"),
-                            res.getTimestamp("date").toLocalDateTime()));
+                            res.getTimestamp("created").toLocalDateTime()));
                 }
             }
         } catch (Exception e) {
@@ -125,17 +130,18 @@ public class SqlTracker implements Store {
 
     @Override
     public Item findById(int id) {
-        Item item = new Item();
+        Item item = null;
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM items WHERE id = ?;")) {
             statement.setInt(1, id);
             try (ResultSet res = statement.executeQuery()) {
                 if (res == null) {
                     item = null;
-                }
-                while (res.next()) {
-                    item.setId(res.getInt("id"));
-                    item.setName(res.getString("name"));
-                    item.setCreated(res.getTimestamp("date").toLocalDateTime());
+                } else {
+                    while (res.next()) {
+                        item = createItem(res.getInt("id"),
+                                res.getString("name"),
+                                res.getTimestamp("created").toLocalDateTime());
+                    }
                 }
             }
         } catch (Exception e) {
