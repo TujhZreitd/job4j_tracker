@@ -37,8 +37,11 @@ public class SqlTracker implements Store {
         }
     }
 
-    private Item createItem(int id, String name, LocalDateTime date) {
-        return new Item(id, name, date);
+    private Item createItem(ResultSet res) throws SQLException {
+        return new Item(
+                res.getInt("id"),
+                res.getString("name"),
+                res.getTimestamp("created").toLocalDateTime());
     }
 
     @Override
@@ -97,10 +100,7 @@ public class SqlTracker implements Store {
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM items;")) {
             try (ResultSet res = statement.executeQuery()) {
                 while (res.next()) {
-                    result.add(createItem(
-                                    res.getInt("id"),
-                                    res.getString("name"),
-                                    res.getTimestamp("created").toLocalDateTime()));
+                    result.add(createItem(res));
                 }
             }
         } catch (Exception e) {
@@ -116,10 +116,7 @@ public class SqlTracker implements Store {
             statement.setString(1, key);
             try (ResultSet res = statement.executeQuery()) {
                 while (res.next()) {
-                    result.add(createItem(
-                            res.getInt("id"),
-                            res.getString("name"),
-                            res.getTimestamp("created").toLocalDateTime()));
+                    result.add(createItem(res));
                 }
             }
         } catch (Exception e) {
@@ -138,9 +135,7 @@ public class SqlTracker implements Store {
                     item = null;
                 } else {
                     while (res.next()) {
-                        item = createItem(res.getInt("id"),
-                                res.getString("name"),
-                                res.getTimestamp("created").toLocalDateTime());
+                        item = createItem(res);
                     }
                 }
             }
