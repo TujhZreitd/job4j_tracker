@@ -1,0 +1,8 @@
+2024-06-17 11:43:15.818748+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "DATABASECHANGELOGLOCK" не найдена
+Table "DATABASECHANGELOGLOCK" not found; SQL statement:
+SELECT COUNT(*) FROM DATABASECHANGELOGLOCK [42102-222]
+2024-06-17 11:43:16.020655+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "ALTER table items [*]DELETE COLUMN checked;"; ожидалось "., ADD, SET, RENAME, DROP, ALTER"
+Syntax error in SQL statement "ALTER table items [*]DELETE COLUMN checked;"; expected "., ADD, SET, RENAME, DROP, ALTER"; SQL statement:
+ALTER table items DELETE COLUMN checked; [42001-222]
