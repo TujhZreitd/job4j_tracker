@@ -106,4 +106,15 @@ public class SqlTrackerTest {
         assertThat(item).isEqualTo(tracker.findById(item.getId()));
     }
 
+    @Test
+    public void whenUseDeleteOneItem() {
+        SqlTracker tracker = new SqlTracker(connection);
+        Item item1 = new Item("item1");
+        Item item2 = new Item("item2");
+        tracker.add(item1);
+        tracker.add(item2);
+        tracker.delete(item1.getId());
+        List<Item> result = List.of(item2);
+        assertThat(result).isEqualTo(tracker.findAll());
+    }
 }
